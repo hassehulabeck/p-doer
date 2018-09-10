@@ -78,10 +78,10 @@ class Laptop {
     $returstring = "<form action='index.php' method='POST'>";
 
     foreach ($this as $key => $value) {
-      $returstring .= "<label for='$key'>$key</label>";
+      $returstring .= "<br /><label for='$key'>$key</label>";
       $returstring .= "<input type='text' name='$key' value='$value'/>";
     }
-    $returstring .= "<input type='submit' value='Lägg in' name='submit' /></form>";
+    $returstring .= "<p><input type='submit' value='Lägg in' name='submit' /></form>";
     return $returstring;
   }
 
