@@ -9,6 +9,26 @@ class Laptop {
   public $screen;
   public $price;
 
+  public function update($model, $values) {
+    $dbh = $this->connect();
+    $updateString = "";
+    foreach ($values as $key => $value) {
+      $updateString .= "$key=\"$value\", ";
+    }
+    $updateString = rtrim($updateString, ", ");
+
+    $query = "UPDATE laptop SET " . $updateString .
+    " WHERE model = $model";
+
+    $stmt = $dbh->prepare($query);
+    if ($stmt->execute()) {
+      return $this->getter($model);
+    }
+    else {
+      return [$query, $stmt->errorInfo()];
+    }
+  }
+
   public function getter($model = 0) {
 
     // Skapa uppkoppling
@@ -62,6 +82,7 @@ class Laptop {
       INSERT INTO laptop
       (" . $columns . ")
       VALUES (" . $vals . ")";
+
     $stmt = $dbh->prepare($query);
 
     if ($stmt->execute()) {
@@ -74,12 +95,12 @@ class Laptop {
     }
   }
 
-  public function getForm() {
+  public function getForm($values) {
     $returstring = "<form action='index.php' method='POST'>";
 
-    foreach ($this as $key => $value) {
+    foreach ($this as $key=>$v) {
       $returstring .= "<br /><label for='$key'>$key</label>";
-      $returstring .= "<input type='text' name='$key' value='$value'/>";
+      $returstring .= "<input type='text' name='$key' value=' {$values[$key]} '/>";
     }
     $returstring .= "<p><input type='submit' value='Lägg in' name='submit' /></form>";
     return $returstring;

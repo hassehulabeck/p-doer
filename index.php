@@ -6,9 +6,15 @@ error_reporting(E_ALL);
 
 include_once("class.Laptop.php");
 
-$query = new Laptop();
 
-echo $query->getForm();
+// Updater
+$laptop = new Laptop();
+
+// Hämta all info om objektet.
+$model2001 = $laptop->getter(2001);
+
+// Skriv ut formulär med värden.
+echo $laptop->getForm($model2001[0]);
 
 // Ta emot värden från formuläret.
 if (isset($_POST['submit'])) {
@@ -16,7 +22,7 @@ if (isset($_POST['submit'])) {
   // Ta bort submiten
   array_pop($insertValues);
   // Anropa settern och skriv ut resultatet.
-  print_r ($query->setter($insertValues));
+  print_r ($laptop->update(2001, $insertValues));
 
 }
 ?>
