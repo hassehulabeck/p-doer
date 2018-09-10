@@ -1,21 +1,20 @@
 <?php
-try {
-  $dbh = new PDO("mysql: host=localhost; dbname=datorbutiken", "cpu", "brOmmablOcks");
+
+include_once("class.Laptop.php");
+
+$query = new Laptop();
+
+// Visa alla rader.
+$result = $query->getter();
+
+foreach ($result as $row) {
+  foreach ($row as $key => $value) {
+    echo "<p>" . $key . " " . $value;
+  }
 }
-catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
-}
 
-// Förbered en query.
-$stmt = $dbh->prepare("
-  SELECT *
-  FROM laptop
-  WHERE 1
-");
 
-// Kör queryn
-$stmt->execute();
-
-// Plocka fram datan.
-print_r($stmt->fetchAll(PDO::FETCH_ASSOC));
+// Visa en modell.
+echo "<p>";
+var_dump($query->getter(2001));
 ?>
