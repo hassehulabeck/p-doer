@@ -10,11 +10,25 @@ include_once("class.Laptop.php");
 // Updater
 $laptop = new Laptop();
 
-// Hämta all info om objektet.
-$model2001 = $laptop->getter(2001);
+// Lista alla laptops.
+$result = $laptop->getter();
+echo "<h1>Lista över laptops</h1><ul>";
+foreach ($result as $row) {
+  echo "<li><a href='index.php?model=" . $row['model'] . "'>" . $row['model'] . "</a>";
+  echo $row['price'] . " kr";
+}
+echo "</ul>";
 
-// Skriv ut formulär med värden.
-echo $laptop->getForm($model2001[0]);
+if (isset($_GET['model'])) {
+  $model = $_GET['model'];
+  $result = $laptop->getter($model);
+  $modelObjekt = $laptop->getter($model);
+
+  // Skriv ut formulär med värden.
+  echo $laptop->getForm($modelObjekt[0]);
+
+}
+
 
 // Ta emot värden från formuläret.
 if (isset($_POST['submit'])) {
@@ -25,4 +39,5 @@ if (isset($_POST['submit'])) {
   print_r ($laptop->update(2001, $insertValues));
 
 }
+
 ?>
