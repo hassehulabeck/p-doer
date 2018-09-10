@@ -38,6 +38,54 @@ class Laptop {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
+  /*
+  * Behöver en associativ array med column => value.
+  */
+  public function setter(array $values) {
+    $dbh = $this->connect();
+
+    // Gör en sträng som innehåller klassens egenskaper
+    $columns = "";
+    // Gör en sträng som innehåller de värden som skickas till funktionen
+    $vals = "";
+
+    // Kolla om någon kolumn/värde saknas.
+    foreach ($values as $key=>$value) {
+      $columns .= $key . ", ";
+      $vals .= "'" . $value . "', ";
+    }
+    // Ta bort det sista kommatecknet.
+    $columns = rtrim($columns, ", ");
+    $vals = rtrim($vals, ", ");
+
+    $query = "
+      INSERT INTO laptop
+      (" . $columns . ")
+      VALUES (" . $vals . ")";
+    $stmt = $dbh->prepare($query);
+
+    if ($stmt->execute()) {
+      return $this->getter($values['model']);
+    }
+    else {
+      echo $query;
+      var_dump($stmt->errorInfo());
+      exit;
+    }
+  }
+
+  public function getForm() {
+    $returstring = "<form action='index.php' method='POST'>";
+
+    foreach ($this as $key => $value) {
+      $returstring .= "<label for='$key'>$key</label>";
+      $returstring .= "<input type='text' name='$key' value='$value'/>";
+    }
+    $returstring .= "<input type='submit' value='Lägg in' name='submit' /></form>";
+    return $returstring;
+  }
+
+
   public function connect() {
     try {
       $dbh = new PDO("mysql: host=localhost; dbname=datorbutiken", "cpu", "brOmmablOcks");
